@@ -5,7 +5,7 @@ new vm.Script(script);
 const pub=fs.readFileSync('apps-script/public/Calendar.html','utf8');
 new vm.Script(pub.match(/<script>([\s\S]*?)<\/script>/)[1].replace(/<\?[\s\S]*?\?>/g,'{}'));
 const ctx=vm.createContext({});
-for(const name of ['rowTitle','staffingDayOrder','performanceKey','performanceSeats','monthDates','staffingGroups','playerLabel','clock12','isShowEntry','callAndPlaces','timing','openPerformance'])vm.runInContext(script.split('\n').find(l=>l.startsWith('function '+name+'(')),ctx);
+for(const name of ['rowTitle','staffingDayOrder','performanceKey','performanceSeats','monthDates','staffingGroups','playerLabel','clock12','isShowEntry','callAndPlaces','rowTiming','openPerformance'])vm.runInContext(script.split('\n').find(l=>l.startsWith('function '+name+'(')),ctx);
 assert.equal(ctx.monthDates('2026-11')[0],'2026-10-26');
 assert.equal(ctx.monthDates('2026-11').at(-1),'2026-12-06');
 assert.ok(ctx.monthDates('2028-02').includes('2028-02-29'));
@@ -32,3 +32,8 @@ ctx.openPerformance(rows[0]);assert.equal(rendered.length,2);
 ctx.openPerformance(rows[2]);assert.equal(rendered.length,1);assert.equal(rendered[0].performanceId,'p2');
 assert.equal(clears,2);assert.equal(opens,2);
 console.log('Popup isolates show/date/time and clears the preceding performance');
+
+for(let minute=0;minute<1440;minute++){const h=Math.floor(minute/60),m=String(minute%60).padStart(2,'0');assert.equal(ctx.clock12(String(h).padStart(2,'0')+':'+m),(h%12||12)+':'+m+' '+(h<12?'AM':'PM'));}
+assert.equal(ctx.callAndPlaces({allDay:true,timeTBD:true}),'Time TBD');
+assert(!ctx.callAndPlaces({type:'Rehearsal',call:'19:00',curtain:'19:30'}).includes('Places'));
+assert(ctx.callAndPlaces({type:'Performance',call:'19:00',curtain:'19:30'}).includes('Places/Show Start: 7:30 PM'));

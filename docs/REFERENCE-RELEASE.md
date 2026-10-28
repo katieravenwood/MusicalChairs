@@ -16,7 +16,7 @@ This package is a generic starter for **[Theatre Name]**, not a backup of any li
 
 The interface reads the actual Call and Curtain values from the workbook. It does not infer a schedule from weekdays or rewrite times. Configure each theatre's dates and times through Performances or Run Rules. Curtain remains the storage/API field name for Places/Show Start. Native browser time-entry controls may follow the browser's locale; this is separate from the AM/PM schedule display.
 
-The companion Streamlit app remains a fictional session-only demonstration. It is not a synchronized replica of every Apps Script production feature; all-day notes and the new paired labels are implemented in the Apps Script version. Do not use the demonstration to validate a live Google installation.
+The Streamlit demo now embeds these same production screens and shared scheduling logic, including all-day notes, Time TBD, optional finish times and the paired labels. It provides public, staffing and administration views with fictional roles and memory-backed service adapters. This demonstrates the interface and data rules, not live Google authentication or permissions. See REFERENCE-PARITY.md.
 
 ## Safe use
 
@@ -28,4 +28,4 @@ For an **existing installation**, do not replace its workbook with the starter. 
 
 Backend/core, authenticated editing, administration, calendar grouping, all-day/feed and blank-time tests are included. Both full HTMLs were separately tested through their complete scripts, including filtering, dialogs, save/discard, admin preview and all 1,440 minute values in each interface. The starter workbook's placeholders and extra headers were rendered and checked, its existing formulas preserved, and numeric date portability tested.
 
-The Streamlit runtime test was not run in the packaging environment because Streamlit was not installed. Pure Python demo and workbook tests passed. No live deployment, Google authentication, authorization, protected-range enforcement or third-party calendar refresh was newly verified by this packaging task.
+Streamlit AppTest, offline HTML DOM integration, the demo adapter suite, the Apps Script suites and workbook transport checks pass. See VERIFICATION.md for the current verification boundary. No live deployment, Google authentication, authorization, protected-range enforcement or third-party calendar refresh was newly verified by this packaging task.

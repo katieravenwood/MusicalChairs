@@ -1,8 +1,8 @@
-> Current release: read [REFERENCE-RELEASE.md](docs/REFERENCE-RELEASE.md). These installation steps are for a new workbook. Do not rerun initialization or replace an existing live workbook simply to update HTML.
+> For a new installation, replace [Theatre Name] in Settings.CalendarTitle and Shows.Venue. For upgrades, preserve the existing workbook and deployment URLs; follow deployment/UPGRADE.md.
 
 # Install the theatre calendar
 
-This deployment uses Google Sheets, a bound workbook-tools project, and two standalone Apps Script web apps (public calendar and authenticated editor). It is designed to operate within free consumer-account quotas for a small orchestra. Quotas and service terms can change. Development and maintenance still require time.
+This deployment uses Google Sheets and three Apps Script projects: bound workbook tools, a public reader, and a signed-in editor. It is designed to operate within free consumer-account quotas for a small orchestra. Quotas and service terms can change. Development and maintenance still require time.
 
 ## 1. Create the workbook
 
@@ -10,9 +10,9 @@ This deployment uses Google Sheets, a bound workbook-tools project, and two stan
 2. Open it and choose **File > Save as Google Sheets** if it has not already been converted. Apps Script needs a native Google Sheet.
 3. Rename it for the theatre and place it in a musician-controlled folder.
 4. Keep sharing restricted while setting up. Do not enable “Anyone with the link can edit.”
-5. In Settings, replace the `[Theatre Name]` placeholder in `CalendarTitle` and Shows.Venue, then confirm `TimeZone` is `America/New_York`.
+5. In Settings, set `CalendarTitle` and confirm `TimeZone` is `America/New_York`.
 
-The initial show is fictional and unpublished. Its dates and names must not be treated as an imported theatre schedule. No real theatre schedule is included.
+The initial show is fictional and unpublished. Its dates and names must not be treated as an imported theatre schedule. No Brown Bear data has been migrated.
 
 ## 2. Install the bound workbook tools
 
@@ -43,7 +43,7 @@ Do not deploy this bound project as a public web app. Workbook editors can inspe
 | Label | Visible chair name |
 | Instrumentation | Instruments or doubling requirements |
 | TabName | Unique Google Sheets tab name |
-| EligiblePlayerIDs | Comma-separated player IDs; blank permits all registered players |
+| EligiblePlayerIDs | Comma-separated player IDs; blank grants no musician editing access |
 | EditorEmails | Calculated display of eligible players’ GoogleEmail addresses; do not maintain manually |
 | RegularPlayerIDs | Comma-separated regular player IDs used to assess cover; blank falls back to EligiblePlayerIDs. Eligible players may also include outside substitutes. |
 
@@ -131,12 +131,16 @@ For existing installations, update Core in both projects and Admin in the bound 
 
 ## Player-based permissions update
 
-Update Core and Admin in the bound workbook project, add Players.GoogleEmail in column C (or run Initialize / repair installation), then Apply chair permissions. Existing Chairs.EditorEmails values are saved in cell notes for reference and replaced with calculated values. They no longer grant access. Configure player emails explicitly; do not infer identities from first names. File sharing remains a separate required step. Google-authenticated in-app editing is not included yet; canEditChair_ provides the shared authorization rule for that future layer. The public reader remains compatible and excludes GoogleEmail from its output.
+Update Core and Admin in the bound workbook project, add Players.GoogleEmail in column C (or run Initialize / repair installation), then Apply chair permissions. Existing Chairs.EditorEmails values are saved in cell notes for reference and replaced with calculated values. They no longer grant access. Configure player emails explicitly; do not infer identities from first names. File sharing remains a separate required step. Google-authenticated in-app editing uses this same authorization rule in the separate signed-in editor. The public reader remains compatible and excludes GoogleEmail from its output.
 
 New performances always create blank PlayerID / Open seats. A chair has no default player. Unclaimed seats appear in Needs cover; the regular-player pool only helps find coverage and never fills a seat automatically. Sync preserves existing assignments and the existing chair-tab layout while refreshing eligible-player and conflict validation.
 
 For existing installations, remove the obsolete DefaultPlayerID column from Chairs after updating both script projects. The reader accepts both the legacy and simplified chair layout, but ignores legacy defaults.
 
-## Optional signed-in editor
+## Install the signed-in staffing editor
 
 Install the separate authenticated project using [these instructions](docs/AUTHENTICATED-EDITOR.md). Do not change the public app into an authenticated editor.
+
+After installation, select Administration to load its forms automatically. Use it to maintain players, shows, chair rosters, individual dates and bulk rules, and to Apply chair permissions. Google sharing and Access administrator changes remain explicit setup tasks. Enter both deployed URLs on Start Here; set Settings.StaffingEditorURL and Settings.PublicAppURL for reciprocal navigation. Copy docs/USER_GUIDE.md into a read-only shared guide if desired and set Settings.InstructionsURL.
+
+Optional Performances columns M:P are AllDay, TimeTBD, StaffingRequired and EventTitle. Keep the original A:L columns in order. All-day/TBD records leave Call, Curtain and End empty; EndDate is inclusive. Set StaffingRequired to false for unstaffed notes. A timed entry may omit End without inventing a finish. See docs/REFERENCE-RELEASE.md.

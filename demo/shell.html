@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+body{font:15px system-ui;color:#24324b;margin:0;background:#f3f5f9}button,select{font:inherit;padding:10px;border:1px solid #a9b4c5;border-radius:6px;background:white;color:#24324b;cursor:pointer}nav{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:12px}button[aria-pressed=true]{background:#243b60;color:white}#app{width:100%;height:980px;border:0}#message{padding:0 12px}#guide{padding:16px;background:white;margin:12px;border-radius:8px}#audit{white-space:pre-wrap}dialog{max-width:90vw;max-height:85vh;overflow:auto;border:1px solid #a9b4c5;border-radius:10px}pre{white-space:pre-wrap}label{display:flex;gap:6px;align-items:center}small{display:block;padding:0 12px 12px}a{color:#234d85}
+</style></head><body>
+<nav aria-label="Demo controls"><button id="public" aria-pressed="true">Public calendar</button><button id="staffing" aria-pressed="false">Staffing editor</button><label>Demo identity<select id="identity-demo"></select></label><button id="reset">Reset demo</button><button id="help">Instructions</button><button id="history">Change history</button></nav>
+<small>This role selector is a demo, not Google authentication. Try Sam to replace Alex in Keys 2, or Administrator to manage all chairs and configuration.</small>
+<p id="message" role="status"></p>
+<section id="guide" hidden><h2>Try the calendar</h2><ol><li>Public calendar: filter dates or choose a first name. Click a performance for its roster and conflicts. Download a snapshot of that player’s dates.</li><li>Staffing editor: choose a demo musician. Only their eligible chairs appear. Select a performance, update one assignment or its unavailable players, then Save this seat. Each popup shows that performance only.</li><li>Administrator: open Administration. Players, shows, chairs, performance dates, and bulk rules load automatically. Preview bulk dates before creating them. New seats are blank and need coverage.</li><li>Use Public Calendar in the editor header to see your saved changes. Subscriptions exist only in the public view.</li></ol><p>The two Mikes have different permanent IDs and different chairs. Display names remain first names. All names and email addresses are fictional.</p><p>Production setup: follow INSTALL.md and docs/AUTHENTICATED-EDITOR.md. Workbook sharing, Google authorization and maintenance triggers are simulated here.</p></section>
+<iframe id="app" title="Pit calendar demo"></iframe>
+<dialog id="records"><h2 id="record-title"></h2><pre id="audit"></pre><button id="undo" hidden>Undo last demo change</button><button id="export">Export fictional data</button><button id="close-records">Close</button></dialog>
+<script>
+/*DEMO_SOURCES*/
+/*DEMO_TEMPLATES*/
+let surface='public';
+const byId=id=>document.getElementById(id);
+function safeJson(value){return JSON.stringify(value).replace(/</g,'\\u003c');}
+function download(text,name,type){const url=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function identityOptions(){const select=byId('identity-demo');select.replaceChildren();const all=[[DEMO_ADMIN,'Administrator — all chairs'],...demoData.Players.map(p=>[p.GoogleEmail,p.DisplayName+' — '+[...new Set(demoData.Chairs.filter(c=>list_(c.EligiblePlayerIDs).includes(p.PlayerID)).map(c=>c.Label))].join(', ')])];all.filter(([v])=>v).forEach(([v,label])=>{const o=document.createElement('option');o.value=v;o.textContent=label;select.append(o)});select.value=demoIdentity;}
+function records(workbook=false){byId('record-title').textContent=workbook?'Fictional workbook data':'Demo change history';byId('audit').textContent=workbook?JSON.stringify(demoData,null,2):demoHistory.map(h=>h.at+' · '+h.label).reverse().join('\n')||'No changes yet.';byId('undo').hidden=workbook||!demoHistory.length||demoIdentity!==DEMO_ADMIN;byId('records').showModal();}
+function confirmNavigation(){const w=byId('app').contentWindow;try{return w.demoCanLeave?w.demoCanLeave():true}catch(e){return true}}
+function route(next,force=false){
+ if(!force&&!confirmNavigation())return;
+ surface=next;byId('message').textContent='';
+ ['public','staffing'].forEach(id=>byId(id).setAttribute('aria-pressed',String(id===next)));
+ let html=templates[next].replace('<base target="_top">','<base target="_self">');
+ if(next==='public')html=html.replace('<?!= payload ?>',safeJson(demoPublicData()));
+ const bridge=`<script>
+ window.google={script:{get run(){let ok=()=>{},fail=()=>{};const runner=new Proxy({}, {get(_,name){if(name==='withSuccessHandler')return fn=>{ok=fn;return runner};if(name==='withFailureHandler')return fn=>{fail=fn;return runner};return arg=>setTimeout(()=>{try{ok(parent.PitDemo.call(name,arg))}catch(e){fail({message:e.message})}},0)}});return runner}}};
+ window.addEventListener('DOMContentLoaded',()=>{
+  window.demoCanLeave=()=>{try{return !(typeof dirty!=='undefined'&&dirty||typeof adminDirty!=='undefined'&&adminDirty)||confirm('Discard unsaved changes?')}catch(e){return true}};
+  document.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;const id=a.id;if(['view-calendar','workspace-signin','staffing-editor','admin-workbook','instructions'].includes(id)){e.preventDefault();if(id==='view-calendar')parent.PitDemo.route('public');else if(id==='admin-workbook')parent.PitDemo.workbook();else if(id==='instructions')parent.PitDemo.help();else parent.PitDemo.route('staffing')}});
+  const identity=document.getElementById('identity');if(identity)new MutationObserver(()=>{if(identity.textContent&&!identity.textContent.startsWith('Demo:'))identity.textContent='Demo: '+identity.textContent}).observe(identity,{childList:true});
+  const sub=document.querySelector('.subscription');if(sub){sub.replaceChildren();const h=document.createElement('h2');h.textContent='My calendar snapshot';const p=document.createElement('p');p.textContent='Demo download only. Production subscriptions use the public Apps Script URL and refresh from Sheets.';const b=document.createElement('button');b.textContent='Download selected player (.ics)';b.onclick=()=>{const id=document.getElementById('player').value;if(!id){p.textContent='Choose a player in the filter above first.';return}parent.PitDemo.snapshot(id)};sub.append(h,p,b);['subhelp','subdetail','feed','apple'].forEach(id=>{const n=document.createElement(id==='feed'?'input':'span');n.id=id;n.hidden=true;sub.append(n)})}
+ });
+ <\/script>`;
+ html=html.replace('</head>',bridge+'</head>');
+ byId('app').srcdoc=html;
+}
+window.PitDemo={call:(name,arg)=>{const result=demoCall(name,arg);if(name==='saveAdminRecord')identityOptions();return result},route,help:()=>byId('guide').hidden=!byId('guide').hidden,workbook:()=>{requireAdmin();records(true)},snapshot:id=>download(demoSnapshot(id),'pit-demo.ics','text/calendar')};
+byId('public').onclick=()=>route('public');byId('staffing').onclick=()=>route('staffing');
+byId('identity-demo').onchange=e=>{if(!confirmNavigation()){e.target.value=demoIdentity;return}demoIdentity=e.target.value;route(surface,true)};
+byId('reset').onclick=()=>{if(!confirm('Reset all fictional demo changes?'))return;seedDemo();demoIdentity=DEMO_ADMIN;identityOptions();route('public',true)};
+byId('help').onclick=()=>PitDemo.help();byId('history').onclick=()=>records();byId('close-records').onclick=()=>byId('records').close();
+byId('undo').onclick=()=>{requireAdmin();const previous=demoHistory.pop();if(previous)demoData=previous.before;byId('records').close();identityOptions();route(surface,true)};
+byId('export').onclick=()=>download(JSON.stringify(demoData,null,2),'pit-calendar-demo.json','application/json');
+identityOptions();route('public',true);
+</script></body></html>

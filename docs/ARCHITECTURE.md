@@ -14,9 +14,10 @@ The stored assignment is independent of its neighboring chairs. Updates in the c
 | --- | --- | --- |
 | Musician's Google Sheets session | Shared workbook | Native permission-controlled cells |
 | Bound workbook script | Current workbook | Workbook setup, generated records, metadata and log |
+| Authenticated editor | Configured workbook and Google identity | Authorized seat saves and admin configuration |
 | Standalone public script | Configured workbook through read-only Sheets scope | No writes |
 | Google / Apple / Outlook subscriber | Public personal ICS URL | Subscriber-controlled calendar cache |
-| Streamlit reference demo | Fictional local seed | Per-visitor session state only |
+| Streamlit reference demo | Fictional local seed | Page-local memory, reset on reload |
 
 Do not combine the bound tools with the publicly deployed project. All non-entry functions in the public project end in an underscore and are unavailable through `google.script.run`. Its only public entrypoint is doGet. No raw worksheet endpoint or arbitrary workbook identifier is accepted from a request.
 
@@ -48,3 +49,7 @@ UnavailablePlayerIDs is a separate per-performance, per-chair list. RegularPlaye
 The shared canEditChair_ helper implements the intended authenticated editor rule, but the current production calendar still exposes read-only HTML/JSON/ICS. The bound tools apply the same eligibility rule to native Sheets protections. Account and roster changes require Apply chair permissions; changing file sharing is separate. GoogleEmail stays out of the public DTO and feeds.
 
 New performances always create blank PlayerID / Open seats. A chair has no default player. Unclaimed seats appear in Needs cover; the regular-player pool only helps find coverage and never fills a seat automatically. Sync preserves existing assignments and the existing chair-tab layout while refreshing eligible-player and conflict validation.
+
+## Shared reference implementation
+
+The Streamlit host embeds the canonical public and authenticated HTML. Core.gs, Editor.gs and AdminWeb.gs are loaded into a demo-only shell with memory-backed service adapters. Production validators, authorization rules, public projection and ICS generation run unchanged; Google storage, identity and trigger operations are simulated. The adapter is never included in deployment bundles. The demo uses stable FirstLast IDs and fictional example.invalid accounts, including two musicians named Mike in different chairs.

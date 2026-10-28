@@ -1,4 +1,12 @@
-# [Theatre Name] — Pit Calendar
+## Using the web apps
+
+Open the Public Calendar to view dates and obtain personal subscriptions. Choose Sign in for staffing to open the authenticated editor. Its Staffing tab shows a month grid of authorized chairs. Click one performance to edit only its seats; matinee and evening shows have separate dialogs. Assignments and unavailable players are separate. Save each seat independently. First names are displayed while permanent player IDs identify the records.
+
+Administrators can select Administration to load players, shows, chair rosters, performance dates and run rules automatically. Use Preview bulk dates before creating a run. All new seats begin blank and need coverage. Apply chair permissions is available in this tab on desktop and mobile. The admin-only Open workbook link is for setup or exceptional maintenance; use Public Calendar in the header to return to the viewing and subscription page.
+
+The reference demo provides a fictional role selector instead of Google login. Its calendar download is a snapshot, and changes reset on page reload.
+
+# Pit Orchestra Calendar
 
 Calendar quick guide
 
@@ -10,7 +18,7 @@ The public calendar and this guide can be read without signing in. Editing the s
 
 - Month shows the schedule grid; click a performance for its roster. List shows the rosters directly. On a phone, use List or swipe the grid sideways.
 
-- All times are Eastern (America/New_York). Call Time is when you must be in the building; Places/Show Start is the show’s start. Schedule listings use AM/PM. Other timed events retain a single Call Time label. A matinee and evening performance are separate entries.
+- All times are Eastern (America/New_York). Call is when you must arrive; curtain is the show’s start. A matinee and evening performance are separate entries.
 
 - Staffing → Needs cover highlights assignments needing coverage. Check the status as well as the player’s name.
 

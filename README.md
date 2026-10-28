@@ -1,12 +1,12 @@
-# [Theatre Name] — Pit Calendar
+# Pit Calendar
 
-A reusable musician-owned pit orchestra staffing calendar. Start with [REFERENCE-RELEASE.md](docs/REFERENCE-RELEASE.md) for the current package scope and upgrade notes. Schedule a show run in bulk, change one chair assignment without replacing the roster, track per-performance conflicts separately from assignments, flag dates needing outside substitutes, and give each musician a calendar containing their assigned dates.
+A musician-owned pit orchestra staffing calendar. Schedule a show run in bulk, change one chair assignment without replacing the roster, track per-performance conflicts separately from assignments, flag dates needing outside substitutes, and give each musician a calendar containing their assigned dates.
 
 The repository contains two implementations:
 
 | Implementation | Purpose | Persistence | Calendar integration |
 | --- | --- | --- | --- |
-| Streamlit reference app | Public portfolio demo with fictional data | Each visitor's browser session | Downloadable ICS snapshot |
+| Streamlit reference app | Public portfolio demo with fictional data | Page-local memory; reset on reload | Downloadable ICS snapshot |
 | Google Sheets + Apps Script | Theatre deployment | Google Sheets | Live, player-specific ICS subscriptions |
 
 The Streamlit demo requires no Google account, credentials, paid database or production calendar connection. It never reads the theatre's workbook.
@@ -24,7 +24,7 @@ streamlit run streamlit_app.py
 
 On Windows, activate with `.venv\Scripts\activate` instead.
 
-The app provides a month/list schedule, player filters, a chair editor, a run builder with preview, personal calendar snapshots, and assignment change history with undo. Each visitor gets independent fictional data. A reset button restores the sample schedule.
+The demo embeds the actual Apps Script public Calendar.html and authenticated Editor.html. It includes month/list public views, a month-grid staffing editor, selected-performance dialogs, independent conflicts, coverage flags, first-name labels, and an Administration tab that loads on selection. AM/PM presentation, Call Time / Places/Show Start labels, all-day and multi-day notes, Time TBD, and optional finish times use the same code as the Google deployment. Choose a fictional musician to edit eligible chairs, or Administrator to manage players, shows, rosters, individual dates and bulk rules. The editor returns to the one public calendar, where personal ICS snapshots are available. Demo changes remain in page memory and reset on reload; Reset restores the sample data.
 
 ## Deploy the demo on Streamlit Community Cloud
 
@@ -53,11 +53,12 @@ Musicians authorized for a chair can edit its full run, including who occupies d
 ## Tests
 
 ```bash
-node tests/test_core.cjs
+npm ci
+npm test
 python -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-The JavaScript tests run the production scheduling and feed functions in Node without Google credentials. Python tests cover assignment isolation, stale edits, undo, bulk scheduling and the Streamlit interface. GitHub Actions runs both suites.
+The JavaScript tests run the production scheduling and feed functions in Node without Google credentials. JavaScript integration tests also exercise the demo adapter and actual HTML screens in an offline DOM. Python tests check the Streamlit host, embedded sources and workbook date transport. GitHub Actions runs both suites.
 
 Local tests do not prove Google authorization, native protected-range behavior or calendar-client refresh behavior. Complete the installation acceptance checks before using a live roster.
 
@@ -65,7 +66,7 @@ Local tests do not prove Google authorization, native protected-range behavior o
 
 | Path | Contents |
 | --- | --- |
-| `streamlit_app.py`, `pit_demo.py` | Fictional, session-only demonstration |
+| `streamlit_app.py`, `demo_preview.py`, `demo/` | Production screens with a fictional in-memory Google-service adapter |
 | `apps-script/Core.gs` | Production schedule generation, validation, time-zone handling and ICS formatting |
 | `apps-script/editor/` | Bound workbook automation and run-preview dialog |
 | `apps-script/public/` | Read-only calendar and ICS service |
@@ -87,8 +88,12 @@ Do not commit real editor emails, production data, deployment identifiers, secre
 - [Streamlit app hibernation](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app)
 - [Outlook subscriptions and update delays](https://support.microsoft.com/en-us/outlook/import-or-subscribe-to-a-calendar-in-outlook-com-or-outlook-on-the-web)
 
-Player permissions are maintained once: Players.GoogleEmail maps each Google account to a stable player ID; Chairs.EligiblePlayerIDs grants access to every assignment in that chair. Access administrators manage all chairs across all shows. Use FirstLast IDs without spaces and first-name display labels; repeated display names remain distinct. The public web calendar is read-only. Google-authenticated staffing and administration are provided by the separate authenticated web app.
+Player permissions are maintained once: Players.GoogleEmail maps each Google account to a stable player ID; Chairs.EligiblePlayerIDs grants access to every assignment in that chair. Access administrators manage all chairs across all shows. Use FirstLast IDs without spaces and first-name display labels; repeated display names remain distinct. The public web calendar remains read-only. A separate Google-authenticated Staffing Editor implements chair editing and administration; its header returns to the public calendar. See docs/AUTHENTICATED-EDITOR.md.
 
 ## Signed-in staffing editor
 
 A separate Apps Script editor is included in `apps-script/authenticated`. See [Authenticated editor setup](docs/AUTHENTICATED-EDITOR.md) for deployment, player permissions, maintenance, and verification. The public calendar remains a separate read-only app.
+
+## Keeping code in sync
+
+Canonical source lives in apps-script/. The demo reads those sources at runtime instead of maintaining another calendar/editor implementation. After changing server code, run `python scripts/build_deployment.py` to refresh the paste-ready deployment bundles. Run `npm test` and the Python tests before publishing. See [docs/REFERENCE-PARITY.md](docs/REFERENCE-PARITY.md) for the demo boundary and feature map.
