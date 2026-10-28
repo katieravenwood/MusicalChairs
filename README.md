@@ -1,4 +1,4 @@
-# Pit Calendar
+# Musical Chairs
 
 A musician-owned pit orchestra staffing calendar. Schedule a show run in bulk, change one chair assignment without replacing the roster, track per-performance conflicts separately from assignments, flag dates needing outside substitutes, and give each musician a calendar containing their assigned dates.
 
