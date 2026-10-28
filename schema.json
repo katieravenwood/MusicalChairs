@@ -1,0 +1,393 @@
+{
+  "Start Here": [
+    [
+      "PIT ORCHESTRA CALENDAR",
+      "Musician-owned scheduling"
+    ],
+    [
+      "Status",
+      "Template only. Demo show is unpublished."
+    ],
+    [
+      "1. Install",
+      "Follow INSTALL.md in the accompanying package."
+    ],
+    [
+      "2. Configure",
+      "Add musician administrators in Access; enter player GoogleEmail once in Players; define each chair\u2019s EligiblePlayerIDs. Share the workbook separately and Apply chair permissions."
+    ],
+    [
+      "3. Chair editing",
+      "Musicians edit PlayerID, AssignmentStatus, PublicNote and UnavailablePlayerIDs on their chair tabs."
+    ],
+    [
+      "4. Bulk dates",
+      "Enter Run Rules, then Pit Calendar > Preview run generation."
+    ],
+    [
+      "5. Publish",
+      "Set Shows.Published to TRUE only after reviewing the dates and assignments."
+    ],
+    [
+      "Public information",
+      "Show, dates, times, chair, first name, status and public notes only."
+    ],
+    [
+      "Subscriptions",
+      "Use the public calendar's player selector to obtain a personal feed."
+    ],
+    [
+      "Ownership",
+      "Keep at least two musician administrators and an agreed owner succession plan."
+    ],
+    [
+      "Recovery",
+      "Recover affected cells from edit history; do not restore the whole workbook over newer edits."
+    ],
+    [
+      "Demo",
+      "All sample dates and people are fictional. Delete the demo before production use."
+    ]
+  ],
+  "Shows": [
+    [
+      "ShowID",
+      "Title",
+      "Venue",
+      "Published"
+    ],
+    [
+      "demo",
+      "DEMO - Training Show",
+      "[Theatre Name]",
+      false
+    ]
+  ],
+  "Players": [
+    [
+      "PlayerID",
+      "DisplayName",
+      "GoogleEmail"
+    ],
+    [
+      "alex",
+      "Alex",
+      ""
+    ],
+    [
+      "sam",
+      "Sam",
+      ""
+    ],
+    [
+      "jo",
+      "Jo",
+      ""
+    ]
+  ],
+  "Chairs": [
+    [
+      "ShowID",
+      "ChairID",
+      "Label",
+      "Instrumentation",
+      "TabName",
+      "EligiblePlayerIDs",
+      "EditorEmails",
+      "RegularPlayerIDs"
+    ],
+    [
+      "demo",
+      "keys2",
+      "Keys 2",
+      "Keyboard",
+      "DEMO Keys 2",
+      "alex,sam",
+      "",
+      "alex,sam"
+    ],
+    [
+      "demo",
+      "drums",
+      "Drums",
+      "Drum kit",
+      "DEMO Drums",
+      "jo,sam",
+      "",
+      "jo,sam"
+    ]
+  ],
+  "Performances": [
+    [
+      "PerformanceID",
+      "ShowID",
+      "Date",
+      "Curtain",
+      "Call",
+      "EndDate",
+      "End",
+      "Status",
+      "EventType",
+      "PublicNote",
+      "Revision",
+      "UpdatedAt",
+      "AllDay",
+      "TimeTBD",
+      "StaffingRequired",
+      "EventTitle"
+    ],
+    [
+      "demo-20261106-1930",
+      "demo",
+      "2026-11-06",
+      "19:30",
+      "19:00",
+      "2026-11-06",
+      "22:00",
+      "Scheduled",
+      "Performance",
+      "Fictional demo",
+      1,
+      "",
+      false,
+      false,
+      true,
+      ""
+    ],
+    [
+      "demo-20261107-1400",
+      "demo",
+      "2026-11-07",
+      "14:00",
+      "13:30",
+      "2026-11-07",
+      "16:30",
+      "Scheduled",
+      "Performance",
+      "Fictional demo",
+      1,
+      "",
+      false,
+      false,
+      true,
+      ""
+    ],
+    [
+      "demo-20261107-1930",
+      "demo",
+      "2026-11-07",
+      "19:30",
+      "19:00",
+      "2026-11-07",
+      "22:00",
+      "Scheduled",
+      "Performance",
+      "Fictional demo",
+      1,
+      "",
+      false,
+      false,
+      true,
+      ""
+    ]
+  ],
+  "Run Rules": [
+    [
+      "ShowID",
+      "StartDate",
+      "EndDate",
+      "Weekdays",
+      "Curtain",
+      "DurationMin",
+      "CallOffsetMin",
+      "EventType",
+      "ExcludeDates",
+      "PublicNote"
+    ],
+    [
+      "demo",
+      "2026-11-06",
+      "2026-11-08",
+      "Fri,Sat",
+      "19:30",
+      150,
+      30,
+      "Performance",
+      "",
+      "Fictional demo"
+    ],
+    [
+      "demo",
+      "2026-11-06",
+      "2026-11-08",
+      "Sat,Sun",
+      "14:00",
+      150,
+      30,
+      "Performance",
+      "",
+      "Fictional demo"
+    ]
+  ],
+  "Access": [
+    [
+      "AdminEmail"
+    ],
+    [
+      ""
+    ]
+  ],
+  "Settings": [
+    [
+      "Key",
+      "Value"
+    ],
+    [
+      "CalendarTitle",
+      "[Theatre Name] \u2014 Pit Calendar"
+    ],
+    [
+      "TimeZone",
+      "America/New_York"
+    ],
+    [
+      "PublicAppURL",
+      ""
+    ],
+    [
+      "LastSuccessfulCheck",
+      "Not installed"
+    ],
+    [
+      "ScheduleRevision",
+      1
+    ],
+    [
+      "LastEditAt",
+      ""
+    ],
+    [
+      "InstructionsURL",
+      ""
+    ]
+  ],
+  "Change Log": [
+    [
+      "Timestamp",
+      "Actor",
+      "Sheet",
+      "Range",
+      "Before",
+      "After",
+      "Note"
+    ]
+  ],
+  "DEMO Keys 2": [
+    [
+      "PerformanceID",
+      "Date",
+      "Call",
+      "Curtain",
+      "PlayerID",
+      "AssignmentStatus",
+      "PublicNote",
+      "Revision",
+      "UpdatedAt",
+      "UnavailablePlayerIDs",
+      "Coverage"
+    ],
+    [
+      "demo-20261106-1930",
+      "2026-11-06",
+      "19:00",
+      "19:30",
+      "alex",
+      "Confirmed",
+      "",
+      1,
+      "",
+      "sam",
+      "Covered"
+    ],
+    [
+      "demo-20261107-1400",
+      "2026-11-07",
+      "13:30",
+      "14:00",
+      "sam",
+      "Confirmed",
+      "",
+      1,
+      "",
+      "",
+      "Covered"
+    ],
+    [
+      "demo-20261107-1930",
+      "2026-11-07",
+      "19:00",
+      "19:30",
+      "alex",
+      "Confirmed",
+      "",
+      1,
+      "",
+      "",
+      "Covered"
+    ]
+  ],
+  "DEMO Drums": [
+    [
+      "PerformanceID",
+      "Date",
+      "Call",
+      "Curtain",
+      "PlayerID",
+      "AssignmentStatus",
+      "PublicNote",
+      "Revision",
+      "UpdatedAt",
+      "UnavailablePlayerIDs",
+      "Coverage"
+    ],
+    [
+      "demo-20261106-1930",
+      "2026-11-06",
+      "19:00",
+      "19:30",
+      "jo",
+      "Confirmed",
+      "",
+      1,
+      "",
+      "",
+      "Covered"
+    ],
+    [
+      "demo-20261107-1400",
+      "2026-11-07",
+      "13:30",
+      "14:00",
+      "jo",
+      "Needs sub",
+      "",
+      1,
+      "",
+      "jo,sam",
+      "Outside substitute needed"
+    ],
+    [
+      "demo-20261107-1930",
+      "2026-11-07",
+      "19:00",
+      "19:30",
+      "jo",
+      "Confirmed",
+      "",
+      1,
+      "",
+      "",
+      "Covered"
+    ]
+  ]
+}

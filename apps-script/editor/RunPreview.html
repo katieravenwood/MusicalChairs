@@ -1,0 +1,8 @@
+<!doctype html><html><head><base target="_top"><style>body{font:14px Arial;color:#24324b;padding:16px}table{border-collapse:collapse;width:100%}td,th{text-align:left;padding:8px;border-bottom:1px solid #ddd}button{padding:12px 20px;background:#283750;color:white;border:0;border-radius:6px;cursor:pointer}#rows{height:340px;overflow:auto}#message{margin:14px 0}</style></head><body>
+<p id="summary"></p><div id="rows"><table><thead><tr><th>Show</th><th>Date</th><th>Call</th><th>Curtain</th><th>Finish</th></tr></thead><tbody id="body"></tbody></table></div><p>Existing performances and assignments will be preserved. New chair rows start blank and Open, flagged as needing coverage until a player takes the performance.</p><button id="save">Create these performances</button><p id="message" role="status"></p>
+<script id="payload" type="application/json"><?!= payload ?></script><script>
+const p=JSON.parse(document.getElementById('payload').textContent);
+document.getElementById('summary').textContent=p.rows.length+' new performances. '+p.skipped+' existing or duplicate dates skipped.';
+p.rows.forEach(r=>{const tr=document.createElement('tr');[r.ShowID,r.Date,r.Call,r.Curtain,r.EndDate+' '+r.End].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});document.getElementById('body').append(tr)});
+document.getElementById('save').onclick=()=>{document.getElementById('save').disabled=true;google.script.run.withSuccessHandler(r=>{document.getElementById('message').textContent=r.created+' performances created.';}).withFailureHandler(e=>{document.getElementById('message').textContent=e.message;document.getElementById('save').disabled=false;}).commitRun(p.key);};
+</script></body></html>

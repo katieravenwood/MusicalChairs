@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+.streamlit/secrets.toml
+.clasp.json
+*.xlsx
+!templates/Pit-Orchestra-Calendar.xlsx
+*.zip
+.DS_Store
+personal-deployment.json
